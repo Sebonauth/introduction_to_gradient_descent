@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Gradient Descent</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            font-size: 150%;
+        }
+        section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 20px;
+        }
+        p, li {
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        ul.no-bullets {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+}
+        .image-placeholder, .interactive-placeholder, .continue-button, .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            text-align: left;
+        }
+        .image-placeholder img, .interactive-placeholder img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .vocab-section {
+            background-color: #f0f8ff;
+        }
+        .vocab-section h3 {
+            color: #1e90ff;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .vocab-section h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .vocab-term {
+            font-weight: bold;
+            color: #1e90ff;
+        }
+        .why-it-matters {
+            background-color: #ffe6f0;
+        }
+        .why-it-matters h3 {
+            color: #d81b60;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .stop-and-think {
+            background-color: #e6e6ff;
+        }
+        .stop-and-think h3 {
+            color: #4b0082;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .continue-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .reveal-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #4b0082;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .test-your-knowledge {
+            background-color: #e6ffe6; /* Light green background */
+        }
+        .test-your-knowledge h3 {
+            color: #28a745; /* Dark green heading */
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .test-your-knowledge h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .test-your-knowledge p {
+            margin-bottom: 15px;
+        }
+        .check-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #28a745; /* Green background */
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+
+        .faq-section {
+            background-color: #fffbea; /* Light yellow background */
+        }
+        .faq-section h3 {
+            color: #ffcc00; /* Bright yellow heading */
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .faq-section h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <section id="section1">
+        
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Image of a person in fog carefully stepping down a hill, representing the iterative process of Gradient Descent.">
+        </div>
+        <h1>Finding the Lowest Point: An Introduction to Gradient Descent</h1>
+        <p>Imagine you're standing on a mountainside in dense fog. You can only see a few feet in front of you, but your goal is to reach the bottom of the valley. How would you do it? A sensible strategy would be to feel the ground around you and take a step in the direction of the steepest descent. Keep repeating this process, and eventually, you'll reach the valley floor.</p>
+           <div class="continue-button" onclick="showNextSection(2)">Continue</div>
+          </section>
+        <section id="section2">
+        <p>This "feel and step" approach is analogous to how Gradient Descent works. In Machine Learning, we often deal with complex problems where we need to find the "lowest point" of a function. This lowest point represents the optimal solution to our problem. This function we're trying to minimize is called the <strong>cost function</strong>, and it measures how "bad" our current solution is.</p>
+        <div class="continue-button" onclick="showNextSection(3)">Continue</div>
+           </section>
+           <section id="section3">
+        <div class="vocab-section">
+            <h3>Build Your Vocab</h3>
+            <h4 class="vocab-term">Cost Function</h4>
+            <p>A function that measures the error of a machine learning model's predictions. The goal of Gradient Descent is to minimize the cost function.</p>
+                  </div>
+        <div class="continue-button" onclick="showNextSection(4)">Continue</div>
+        </section>
+        <section id="section4">
+        <div class="why-it-matters">
+            <h3>Why It Matters</h3>
+            <p>Gradient Descent is the engine behind many machine learning models. It's the process that allows models to learn from data and improve their predictions. Without Gradient Descent, training complex models like neural networks would be practically impossible.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(5)">Continue</div>
+    </section>
+
+    <section id="section5">
+        <h2>The Math Behind the Descent</h2>
+        <p>Let's formalize this intuitive idea with a bit of math. Don't worry; we'll break it down step by step. The key to finding the steepest descent lies in the concept of a <strong>gradient</strong>. The gradient of a function at a particular point tells us the direction of the steepest increase. Since we want to go downhill, we'll move in the opposite direction of the gradient.</p>
+        <div class="continue-button" onclick="showNextSection(6)">Continue</div>
+        </section>
+        <section id="section6">
+                <p>Think of a simple function like \(y = x^2\). Its derivative is \(\frac{dy}{dx} = 2x\). The derivative at a point \(x\) gives us the slope of the function at that point, which indicates the direction of the steepest ascent.</p>
+        <div class="interactive-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Interactive element – A graph of y = x^2 where users can select a point and see the tangent line representing the derivative/slope at that point.">
+        </div>
+        <p>In Gradient Descent, we use this slope information to update our current guess. We take a step proportional to the negative of the gradient. The size of this step is controlled by a parameter called the <strong>learning rate</strong> (α), a small positive number.</p>
+        <div class="continue-button" onclick="showNextSection(7)">Continue</div> 
+        </section>
+         <section id="section7">
+        <p>The core update rule of Gradient Descent is:</p>
+        <p>\[ \beta_{new} = \beta_{old} - \alpha * \nabla C(\beta_{old}) \]</p>
+        <p>Let's break down this formula:</p>
+        <ul>
+            <li>\(\beta_{old}\): Our current guess for the optimal solution. Think of this as your current position on the mountain.</li>
+            <li>\(\alpha\): The learning rate. This determines how big a step we take. A smaller learning rate means smaller steps, while a larger learning rate means bigger steps.</li>
+            <li>\(\nabla C(\beta_{old})\): The gradient of the cost function (C) at our current guess (\(\beta_{old}\)). This tells us the direction of the steepest increase in the cost function. The negative sign ensures we move in the direction of decreasing cost.</li>
+            <li>\(\beta_{new}\): Our updated guess after taking a step. This is your new position after taking a step downhill.</li>
+        </ul>
+        <div class="continue-button" onclick="showNextSection(8)">Continue</div>
+        </section>
+        
+         <section id="section8">
+        <div class="vocab-section">
+            <h3>Build Your Vocab</h3>
+            <h4 class="vocab-term">Gradient</h4>
+            <p>The vector of partial derivatives of a function. It points in the direction of the greatest rate of increase of the function.</p>
+            <h4 class="vocab-term">Learning Rate</h4>
+            <p>A hyperparameter that controls the step size during Gradient Descent.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(9)">Continue</div>
+        </section>
+        
+          <section id="section9">
+        <div class="stop-and-think">
+            <h3>Stop and Think</h3>
+            <h4>If the learning rate (α) is too large, what could happen during the Gradient Descent process? What if it's too small?</h4>
+            <button class="reveal-button" onclick="revealAnswer('stop-and-think-1')">Reveal</button>
+            <p id="stop-and-think-1" style="display: none;">If the learning rate is too large, the algorithm might overshoot the minimum and fail to converge. It's like taking overly large steps down the mountain and ending up further away from the bottom. If the learning rate is too small, the algorithm might take too long to converge or get stuck in a local minimum, similar to taking tiny steps and never quite reaching the valley floor.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(10)">Continue</div>
+    </section>
+
+    <section id="section10">
+        <h3>Bringing it Together: An Example</h3>
+        <p>Let's say our cost function is \(C(\beta) = \beta^2\), and our current guess is \(\beta_{old} = 3\). We'll use a learning rate of \(\alpha = 0.1\).</p>
+        <ol>
+            <li><strong>Calculate the gradient:</strong> \(\nabla C(\beta_{old}) = 2\beta_{old} = 2 * 3 = 6\)</li>
+            <li><strong>Update the guess:</strong>
+                <p>\[ \beta_{new} = \beta_{old} - \alpha * \nabla C(\beta_{old}) \]</p>
+                <p>\[ \beta_{new} = 3 - 0.1 * 6 \]</p>
+                <p>\[ \beta_{new} = 2.4 \]</p>
+            </li>
+        </ol>
+        <p>Our updated guess is now 2.4. We repeat this process until we reach a point where the updates become very small, indicating that we're close to the minimum.</p>
+        <div class="test-your-knowledge">
+            <h3>Test Your Knowledge</h3>
+            <h4>If the cost function is \(C(\beta) = 2\beta + 1 \) and the current guess is \(\beta = 4 \) with a learning rate of 0.2, what is the new value of \(\beta\) after one Gradient Descent update?</h4>
+            <button class="check-button" onclick="revealAnswer('test-your-knowledge-1')">Reveal</button>
+            <div id="test-your-knowledge-1" style="display: none;">
+                <p><strong>Answer:</strong> 3.6</p>
+                <p><strong>Explanation:</strong> The gradient is 2. New Beta = 4 - 0.2 * 2 = 3.6</p>
+            </div>
+        </div>
+        <div class="continue-button" onclick="showNextSection(11)">Continue</div>
+    </section>
+
+    
+        
+        <section id="section11">
+        <div class="faq-section">
+            <h3>Frequently Asked Questions</h3>
+            <h4>Does Gradient Descent always find the absolute minimum?</h4>
+            <p>Not necessarily. We will discuss this in more detail in a later lesson. It often finds a "good enough" solution, but there are limitations we'll explore.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(12)">Continue</div>
+    </section>
+
+    <section id="section12">
+        <h3>Review and Reflect</h3>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Image of a ball reaching the bottom of a valley, symbolizing finding the minimum of a cost function.">
+        </div>
+        <p>In this lesson, we explored the fundamental concepts of Gradient Descent. We learned how it uses the gradient of a cost function to iteratively find the minimum, much like navigating down a mountain in fog. We also delved into the math behind the update rule and saw a simple example of how it works in practice.</p>
+        <div class="continue-button" onclick="showNextSection(13)">Continue</div> 
+        </section>
+         <section id="section13">
+        <p>Key takeaways:</p>
+        <ul>
+            <li>Gradient Descent is an iterative optimization algorithm used to minimize a cost function.</li>
+            <li>The gradient indicates the direction of the steepest ascent, and we move in the opposite direction to descend.</li>
+            <li>The learning rate controls the size of the steps we take during each iteration.</li>
+        </ul>
+        <div class="continue-button" onclick="showNextSection(14)">Continue</div>
+         </section>
+         <section id="section14">
+        <p>Make sure you understand the core concepts and the update rule before moving on to the next lesson, where we'll apply Gradient Descent to Linear Regression.</p>
+    </section>
+
+    <script>
+        // Show the first section initially
+        document.getElementById("section1").style.display = "block";
+        document.getElementById("section1").style.opacity = "1";
+
+        function showNextSection(nextSectionId) {
+            const currentButton = event.target;
+            const nextSection = document.getElementById("section" + nextSectionId);
+            
+            currentButton.style.display = "none";
+            
+            nextSection.style.display = "block";
+            setTimeout(() => {
+                nextSection.style.opacity = "1";
+            }, 10);
+
+            setTimeout(() => {
+                nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+
+        function revealAnswer(id) {
+            const revealText = document.getElementById(id);
+            const revealButton = event.target;
+            
+            revealText.style.display = "block";
+            revealButton.style.display = "none";
+        }
+    </script>
+</body>
+</html>
