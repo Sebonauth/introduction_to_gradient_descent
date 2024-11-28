@@ -190,7 +190,7 @@
     </section>
 
     <section id="section5">
-        <h2>The Math Behind the Descent</h2>
+        <h3>The Math Behind the Descent</h3>
         <p>Let's formalize this intuitive idea with a bit of math. Don't worry; we'll break it down step by step. The key to finding the steepest descent lies in the concept of a <strong>gradient</strong>. The gradient of a function at a particular point tells us the direction of the steepest increase. Since we want to go downhill, we'll move in the opposite direction of the gradient.</p>
         <div class="continue-button" onclick="showNextSection(6, event)">Continue</div>
     </section>
@@ -198,7 +198,7 @@
     <section id="section6">
         <p>Think of a simple function like \(y = x^2\). Its derivative is \(\frac{dy}{dx} = 2x\). The derivative at a point \(x\) gives us the slope of the function at that point, which indicates the direction of the steepest ascent.</p>
         <div style="margin-bottom: 20px;">
-    <p><strong>Explore the Graph:</strong> Click on any point on the curve \(y = x^2\) to see the tangent line at that point. The slope and tangent line update dynamically!</p>
+    <p>Click on any point on the curve \(y = x^2\) to see the tangent line at that point. The slope and tangent line update dynamically!</p>
 </div>
 <div id="interactive-plot" style="width: 100%; height: 500px;"></div>
 <div style="margin-top: 20px; background-color: #f0f0f0; padding: 15px; border-radius: 8px; text-align: center; width: 50%; margin-left: auto; margin-right: auto;">
@@ -326,12 +326,12 @@
     <section id="section7">
         <p>The core update rule of Gradient Descent is:</p>
         <p>\[ \beta_{\text{new}} = \beta_{\text{old}} - \alpha \cdot \nabla C(\beta_{\text{old}}) \]</p>
-        <p>Let's break down this formula:</p>
+        <p>Let's break down this formula, where:</p>
         <ul>
-            <li>\(\beta_{\text{old}}\): Our current guess for the optimal solution. Think of this as your current position on the mountain.</li>
-            <li>\(\alpha\): The learning rate. This determines how big a step we take. A smaller learning rate means smaller steps, while a larger learning rate means bigger steps.</li>
-            <li>\(\nabla C(\beta_{\text{old}})\): The gradient of the cost function (\(C\)) at our current guess (\(\beta_{\text{old}}\)). This tells us the direction of the steepest increase in the cost function. The negative sign ensures we move in the direction of decreasing cost.</li>
-            <li>\(\beta_{\text{new}}\): Our updated guess after taking a step. This is your new position after taking a step downhill.</li>
+            <li>\(\beta_{\text{old}}\) is our current guess for the optimal solution. Think of this as your current position on the mountain.</li>
+            <li>\(\alpha\) is the learning rate. This determines how big a step we take. A smaller learning rate means smaller steps, while a larger learning rate means bigger steps.</li>
+            <li>\(\nabla C(\beta_{\text{old}})\) is the gradient of the cost function (\(C\)) at our current guess (\(\beta_{\text{old}}\)). This tells us the direction of the steepest increase in the cost function. The negative sign ensures we move in the direction of decreasing cost.</li>
+            <li>\(\beta_{\text{new}}\) is our updated guess after taking a step. This is your new position after taking a step downhill.</li>
         </ul>
         <div class="continue-button" onclick="showNextSection(8, event)">Continue</div>
     </section>
