@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introduction to Gradient Descent</title>
+    <title>Introduction to Optimization and Gradient Descent</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,11 +32,6 @@
         }
         ul {
             padding-left: 20px;
-        }
-        ul.no-bullets {
-            list-style-type: none; /* Remove bullets */
-            padding: 0; /* Remove padding */
-            margin: 0; /* Remove margins */
         }
         .image-placeholder, .interactive-placeholder, .continue-button, .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
             text-align: left;
@@ -109,10 +104,10 @@
             cursor: pointer;
         }
         .test-your-knowledge {
-            background-color: #e6ffe6; /* Light green background */
+            background-color: #e6ffe6;
         }
         .test-your-knowledge h3 {
-            color: #28a745; /* Dark green heading */
+            color: #28a745;
             font-size: 0.75em;
             margin-bottom: 5px;
             margin-top: 5px;
@@ -131,7 +126,7 @@
             padding: 10px 20px;
             margin-top: 15px;
             color: #ffffff;
-            background-color: #28a745; /* Green background */
+            background-color: #28a745;
             border-radius: 5px;
             text-decoration: none;
             cursor: pointer;
@@ -139,10 +134,10 @@
             font-size: 1em;
         }
         .faq-section {
-            background-color: #fffbea; /* Light yellow background */
+            background-color: #fffbea;
         }
         .faq-section h3 {
-            color: #ffcc00; /* Bright yellow heading */
+            color: #ffcc00;
             font-size: 0.75em;
             margin-bottom: 5px;
             margin-top: 5px;
@@ -153,272 +148,171 @@
             margin-top: 10px;
             margin-bottom: 8px;
         }
+        #gradientDescentChart {
+            width: 100%;
+            height: 300px;
+        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/scichart@3.1.364/_wasm/scichart.browser.js"></script>
+    <script type="module" src="gradientDescentChart.js"></script>
 </head>
 <body>
     <section id="section1">
         <div class="image-placeholder">
-            <img src="images/mountain_descent.png" alt="Image of a person carefully descending a mountain, representing the iterative process of Gradient Descent.">
+            <img src="/placeholder.svg?height=300&width=600" alt="A friendly-looking robot with gears turning in its head, standing at the base of a valley, looking towards the lowest point. The robot is labeled 'Algorithm', and the valley is labeled 'Objective Function'.">
         </div>
-        <h1>Finding the Lowest Point: An Introduction to Gradient Descent</h1>
-        <p>Imagine you're standing on a mountainside in dense fog. You can only see a few feet in front of you, but your goal is to reach the bottom of the valley. How would you do it? A sensible strategy would be to feel the ground around you and take a step in the direction of the steepest descent. Keep repeating this process, and eventually, you'll reach the valley floor.</p>
-        <div class="continue-button" onclick="showNextSection(2, event)">Continue</div>
+        <h1>Introduction to Optimization and Gradient Descent</h1>
+        <p>In machine learning, we often talk about 'training' a model. But what does that actually mean? Essentially, we're trying to find the best set of parameters for our model so that it performs well on a given task, like predicting house prices or classifying images. This process of finding the best parameters is called <em>optimization</em>. Today, we'll dive into one of the most fundamental optimization algorithms: <em>Gradient Descent</em>.</p>
+        <div class="continue-button" onclick="showNextSection(2)">Continue</div>
     </section>
 
     <section id="section2">
-        <p>This "feel and step" approach is analogous to how Gradient Descent works. In Machine Learning, we often deal with complex problems where we need to find the "lowest point" of a function. This lowest point represents the optimal solution to our problem. This function we're trying to minimize is called the <strong>cost function</strong>, and it measures how "bad" our current solution is.</p>
-        <div class="continue-button" onclick="showNextSection(3, event)">Continue</div>
+    <p>Optimization is the heart of machine learning. Without efficient optimization algorithms, training complex models would be impossible. Imagine trying to find the lowest point in a huge, complicated valley by just randomly walking around - that would take forever! Gradient Descent, in its various forms, is the workhorse behind many successful machine learning applications, guiding us efficiently to that lowest point.</p>
+        <div class="continue-button" onclick="showNextSection(3)">Continue</div>
     </section>
 
     <section id="section3">
+        <p>Before we go further, let's make sure we're all speaking the same language. Here are a few key terms:</p>
         <div class="vocab-section">
             <h3>Build Your Vocab</h3>
-            <h4 class="vocab-term">Cost Function</h4>
-            <p>A function that measures the error of a machine learning model's predictions. The goal of Gradient Descent is to minimize the cost function.</p>
+            <h4 class="vocab-term">Optimization</h4>
+            <p>The process of finding the best set of parameters for a model to minimize (or maximize) a given objective function.</p>
+            <h4 class="vocab-term">Parameters</h4>
+            <p>Variables in a machine learning model that are adjusted during training.</p>
+            <h4 class="vocab-term">Objective Function</h4>
+            <p>A function that measures the performance of a model, often representing the error or cost that we want to minimize.</p>
         </div>
-        <div class="continue-button" onclick="showNextSection(4, event)">Continue</div>
+        <div class="continue-button" onclick="showNextSection(4)">Continue</div>
     </section>
 
     <section id="section4">
-        <div class="why-it-matters">
-            <h3>Why It Matters</h3>
-            <p>Gradient Descent is the engine behind many machine learning models. It's the process that allows models to learn from data and improve their predictions. Without Gradient Descent, training complex models like neural networks would be practically impossible. Applications range from image recognition to natural language processing and beyond.</p>
+        <p>Imagine you're standing on a hillside, and you want to get to the lowest point in the valley. One way to do this is to always walk in the direction of the steepest downhill slope. That's essentially what Gradient Descent does. It's an iterative algorithm that adjusts the parameters of our model step by step, always moving in the direction that minimizes the error. But how does it know which direction is 'downhill'?</p>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="A person standing on a hillside, with arrows pointing downwards showing the steepest path to the bottom of the valley. The person is labeled 'Current Parameters', and the arrows are labeled 'Gradient'.">
         </div>
-        <div class="continue-button" onclick="showNextSection(5, event)">Continue</div>
+        <div class="continue-button" onclick="showNextSection(5)">Continue</div>
     </section>
 
     <section id="section5">
-        <h3>The Math Behind the Descent</h3>
-        <p>Let's formalize this intuitive idea with a bit of math. Don't worry; we'll break it down step by step. The key to finding the steepest descent lies in the concept of a <strong>gradient</strong>. The gradient of a function at a particular point tells us the direction of the steepest increase. Since we want to go downhill, we'll move in the opposite direction of the gradient.</p>
-        <div class="continue-button" onclick="showNextSection(6, event)">Continue</div>
+        <p>To figure out which way is downhill, we need a way to measure how 'wrong' our model is. That's where the <em>cost function</em> comes in. Let's use \( J(\theta) \) to represent the cost function. Our goal is to find the parameters \( \theta \) that minimize \( J(\theta) \). For example in linear regression our cost function might look like this:</p>
+        <p>\( J(\theta) = \frac{1}{2m} \sum_{i=1}^{m} (h_{\theta}(x^{(i)}) - y^{(i)})^2 \)</p>
+        <ul>
+            <li>Here, \( m \) is the number of training examples.</li>
+            <li>\( h_{\theta}(x^{(i)}) \) is our model's prediction for the i-th example.</li>
+            <li>\( y^{(i)} \) is the actual value for the i-th example.</li>
+        </ul>
+        <p>So, we are calculating the squared difference between our prediction and the actual value, summing those up, and taking the average (scaled by \( \frac{1}{2} \) for mathematical convenience later on). Essentially, the cost function tells us how far our model's predictions are from the actual values. The lower the cost, the better our model is performing. The \( \frac{1}{2} \) is just for mathematical convenience, to make the derivative cleaner.</p>
+        <div class="continue-button" onclick="showNextSection(6)">Continue</div>
     </section>
 
     <section id="section6">
-        <p>Think of a simple function like \(y = x^2\). Its derivative is \(\frac{dy}{dx} = 2x\). The derivative at a point \(x\) gives us the slope of the function at that point, which indicates the direction of the steepest ascent.</p>
-        <div style="margin-bottom: 20px;">
-    <p>Click on any point on the curve \(y = x^2\) to see the tangent line at that point. The slope and tangent line update dynamically!</p>
-</div>
-<div id="interactive-plot" style="width: 100%; height: 500px;"></div>
-<div style="margin-top: 20px; background-color: #f0f0f0; padding: 15px; border-radius: 8px; text-align: center; width: 50%; margin-left: auto; margin-right: auto;">
-    <p><strong>x:</strong> <span id="selected-x">0.00</span></p>
-    <p><strong>y:</strong> <span id="selected-y">0.00</span></p>
-    <p><strong>Slope:</strong> <span id="selected-slope">0.00</span></p>
-</div>
-<script src="https://cdn.plot.ly/plotly-2.24.2.min.js"></script>
-<script>
-    // Generate data for the parabola y = x^2
-    const xValues = Array.from({ length: 101 }, (_, i) => -5 + 0.1 * i); // x from -5 to 5
-    const yValues = xValues.map(x => x ** 2); // y = x^2
-
-    // Function to calculate the tangent line data at a given point
-    const calculateTangent = (x) => {
-        const slope = 2 * x;
-        const y = x ** 2;
-        return {
-            x,
-            y,
-            slope,
-            tangentLine: xValues.map((xi) => y + slope * (xi - x)), // Tangent line formula
-        };
-    };
-
-    // Initial tangent point
-    let tangentPoint = 0;
-    let tangentData = calculateTangent(tangentPoint);
-
-    // Data for the parabola
-    const parabola = {
-        x: xValues,
-        y: yValues,
-        type: 'scatter',
-        mode: 'lines',
-        name: 'y = x^2',
-        line: { color: '#1e90ff', width: 4 }, // Nice blue line
-    };
-
-    // Data for the tangent line
-    const tangentLine = {
-        x: xValues,
-        y: tangentData.tangentLine,
-        type: 'scatter',
-        mode: 'lines',
-        name: `Tangent Line at x = ${tangentPoint}`,
-        line: { dash: 'dash', color: '#4b0082', width: 3 }, // Indigo dashed line
-    };
-
-    // Marker for the selected point
-    const tangentPointMarker = {
-        x: [tangentData.x],
-        y: [tangentData.y],
-        mode: 'markers+text',
-        text: [`Slope: ${tangentData.slope.toFixed(2)}`],
-        textposition: 'top center',
-        name: 'Selected Point',
-        marker: { color: '#d81b60', size: 12, symbol: 'circle' }, // Pink circle marker
-    };
-
-    // Layout configuration
-    const layout = {
-        xaxis: { title: 'x', range: [-5, 5], showgrid: false, zeroline: true },
-        yaxis: { title: 'y', range: [0, 30], showgrid: false, zeroline: true },
-        plot_bgcolor: '#f0f8ff', // Light blue background
-        paper_bgcolor: '#ffffff', // White surrounding area
-        showlegend: false, // Hides legend for cleaner look
-        margin: { t: 0, r: 0, l: 40, b: 40 }, // Adjusted margins
-    };
-
-    const config = {
-        responsive: true,
-        displayModeBar: false, // Hides Plotly's menu
-        staticPlot: false, // Allows clicking on the graph
-    };
-
-    // Plot the graph
-    Plotly.newPlot('interactive-plot', [parabola, tangentLine, tangentPointMarker], layout, config);
-
-    // Add interactivity for clicking to select a point
-    const interactivePlot = document.getElementById('interactive-plot');
-    interactivePlot.on('plotly_click', (event) => {
-        if (event.points.length > 0) {
-            // Get the x-coordinate of the clicked point
-            const selectedX = event.points[0].x;
-
-            // Update the tangent data
-            tangentData = calculateTangent(selectedX);
-
-            // Update the plot with the new tangent line and marker
-            const updatedTangentLine = {
-                x: xValues,
-                y: tangentData.tangentLine,
-                mode: 'lines',
-                line: { dash: 'dash', color: '#4b0082', width: 3 },
-                name: `Tangent Line at x = ${selectedX.toFixed(2)}`,
-            };
-
-            const updatedTangentPointMarker = {
-                x: [tangentData.x],
-                y: [tangentData.y],
-                mode: 'markers+text',
-                text: [`Slope: ${tangentData.slope.toFixed(2)}`],
-                textposition: 'top center',
-                marker: { color: '#d81b60', size: 12, symbol: 'circle' },
-                name: 'Selected Point',
-            };
-
-            // Update the graph
-            Plotly.react('interactive-plot', [parabola, updatedTangentLine, updatedTangentPointMarker], layout, config);
-
-            // Update the numerical display below the graph
-            document.getElementById('selected-x').innerText = selectedX.toFixed(2);
-            document.getElementById('selected-y').innerText = tangentData.y.toFixed(2);
-            document.getElementById('selected-slope').innerText = tangentData.slope.toFixed(2);
-        }
-    });
-</script>
-
-
-        <p>In Gradient Descent, we use this slope information to update our current guess. We take a step proportional to the negative of the gradient. The size of this step is controlled by a parameter called the <strong>learning rate</strong> (\(\alpha\)), a small positive number.</p>
-        <div class="continue-button" onclick="showNextSection(7, event)">Continue</div> 
+        <p>Now, we need to figure out the direction of the steepest descent. That's where the <em>gradient</em> comes in. The gradient is a vector that points in the direction of the greatest increase of the function. We calculate the partial derivatives of \( J(\theta) \) with respect to each parameter in \( \theta \).</p>
+        <p>\( \nabla J(\theta) = \begin{bmatrix} \frac{\partial J}{\partial \theta_0} \\ \frac{\partial J}{\partial \theta_1} \\ \vdots \\ \frac{\partial J}{\partial \theta_n} \end{bmatrix} \)</p>
+        <ul>
+            <li>Each \( \frac{\partial J}{\partial \theta_j} \) represents the partial derivative of the cost function with respect to the parameter \( \theta_j \).</li>
+            <li>In simpler terms the gradient tells you, which way is 'up'.</li>
+        </ul>
+        <div class="stop-and-think">
+            <h3>Stop and Think</h3>
+            <h4>Why do we move in the <em>opposite</em> direction of the gradient? What might happen if we moved in the same direction? Discuss.</h4>
+            <button class="reveal-button" onclick="revealAnswer('stop-and-think-1')">Reveal</button>
+            <p id="stop-and-think-1" style="display: none;">We move in the opposite direction because the gradient points towards the <em>increase</em> of the function, and we want to find the <em>minimum</em>. If we moved in the same direction as the gradient, we'd be climbing up the hill, not going down!</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(7)">Continue</div>
     </section>
 
     <section id="section7">
-        <p>The core update rule of Gradient Descent is:</p>
-        <p>\[ \beta_{\text{new}} = \beta_{\text{old}} - \alpha \cdot \nabla C(\beta_{\text{old}}) \]</p>
-        <p>Let's break down this formula, where:</p>
+        <p>Finally, we update our parameters by taking a step in the opposite direction of the gradient. The size of this step is determined by the <em>learning rate</em>, denoted by \( \alpha \).</p>
+        <p>\( \theta_j := \theta_j - \alpha \frac{\partial J(\theta)}{\partial \theta_j} \)</p>
         <ul>
-            <li>\(\beta_{\text{old}}\) is our current guess for the optimal solution. Think of this as your current position on the mountain.</li>
-            <li>\(\alpha\) is the learning rate. This determines how big a step we take. A smaller learning rate means smaller steps, while a larger learning rate means bigger steps.</li>
-            <li>\(\nabla C(\beta_{\text{old}})\) is the gradient of the cost function (\(C\)) at our current guess (\(\beta_{\text{old}}\)). This tells us the direction of the steepest increase in the cost function. The negative sign ensures we move in the direction of decreasing cost.</li>
-            <li>\(\beta_{\text{new}}\) is our updated guess after taking a step. This is your new position after taking a step downhill.</li>
+            <li>Here, \( \theta_j \) is the j-th parameter we are updating.</li>
+            <li>\( \alpha \) is the learning rate, which controls the size of the step we take.</li>
+            <li>\( \frac{\partial J(\theta)}{\partial \theta_j} \) is the partial derivative of the cost function with respect to \( \theta_j \), telling us the slope in the direction of \( \theta_j \).</li>
         </ul>
-        <div class="continue-button" onclick="showNextSection(8, event)">Continue</div>
+        <p>So, we're essentially subtracting a fraction of the slope from our current parameter value to move towards the minimum.</p>
+        <div class="continue-button" onclick="showNextSection(8)">Continue</div>
     </section>
 
     <section id="section8">
-        <div class="vocab-section">
-            <h3>Build Your Vocab</h3>
-            <h4 class="vocab-term">Gradient</h4>
-            <p>The vector of partial derivatives of a function. It points in the direction of the greatest rate of increase of the function.</p>
-            <h4 class="vocab-term">Learning Rate</h4>
-            <p>A hyperparameter that controls the step size during Gradient Descent.</p>
-            <h4 class="vocab-term">Derivative</h4>
-            <p>A measure of how a function changes as its input changes. It represents the slope of the function at a point.</p>
+        <div class="image-placeholder">
+            <div id="gradientDescentChart"></div>
         </div>
-        <div class="continue-button" onclick="showNextSection(9, event)">Continue</div>
+        <p>This plot shows a simple cost function. You can see how the gradient arrows point uphill. Our algorithm starts at a point on the surface and takes steps in the opposite direction of the gradient, gradually moving towards the bottom of the bowl.</p>
+        <div class="continue-button" onclick="showNextSection(9)">Continue</div>
     </section>
 
     <section id="section9">
-        <div class="stop-and-think">
-            <h3>Stop and Think</h3>
-            <h4>If the learning rate (\(\alpha\)) is too large, what could happen during the Gradient Descent process? What if it's too small?</h4>
-            <button class="reveal-button" onclick="revealAnswer('stop-and-think-1', event)">Reveal</button>
-            <p id="stop-and-think-1" style="display: none;">If the learning rate is too large, the algorithm might overshoot the minimum and fail to converge or even diverge. It's like taking overly large steps and missing the valley floor entirely. If the learning rate is too small, the algorithm may take an excessively long time to converge or get stuck in regions where progress is minimal, similar to taking tiny steps and making very slow progress down the mountain.</p>
+        <p>Gradient Descent doesn't find the optimal solution in one shot. It's an iterative process. We start with an initial guess for our parameters and then repeatedly refine them until we reach a minimum (or get close enough). Let's illustrate this with a simple example.</p>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="A staircase descending into a valley, with each step labeled 'Iteration 1', 'Iteration 2', etc. A stick figure is walking down the stairs.">
         </div>
-        <div class="continue-button" onclick="showNextSection(10, event)">Continue</div>
+        <div class="continue-button" onclick="showNextSection(10)">Continue</div>
     </section>
 
     <section id="section10">
-        <h3>Bringing it Together: An Example</h3>
-        <p>Let's say our cost function is \(C(\beta) = (\beta - 2)^2\), and our current guess is \(\beta_{\text{old}} = 4\). We'll use a learning rate of \(\alpha = 0.1\).</p>
-        <ol>
-            <li><strong>Calculate the gradient:</strong><p> \(\nabla C(\beta_{\text{old}}) = 2(\beta_{\text{old}} - 2) = 2(4 - 2) = 4\)</p></li>
-            <li><strong>Update the guess:</strong>
-                <p>\( \beta_{\text{new}} = \beta_{\text{old}} - \alpha \cdot \nabla C(\beta_{\text{old}}) \)</p>
-                <p>\( \beta_{\text{new}} = 4 - 0.1 \times 4 = 3.6 \)</p>
-            </li>
-        </ol>
-        <p>Our updated guess is now 3.6. We repeat this process until the changes in \(\beta\) become negligible, indicating that we've reached close to the minimum at \(\beta = 2\).</p>
-           <div class="continue-button" onclick="showNextSection(11, event)">Continue</div>
+        <h2>Let's Do Some Math</h2>
+        <p>Let's say our cost function is \( J(\theta) = \theta^2 \), and our initial guess is \( \theta = 3 \). The learning rate \( \alpha \) is 0.1.</p>
+        <p>\( \text{1. Calculate the gradient: } \frac{\partial J(\theta)}{\partial \theta} = 2\theta \)</p>
+        <p>\( \text{2. Iteration 1:} \)</p>
+        <p>\( \quad \text{Gradient at } \theta = 3: 2 * 3 = 6 \)</p>
+        <p>\( \quad \text{Update: } \theta := 3 - 0.1 * 6 = 2.4 \)</p>
+        <p>\( \text{3. Iteration 2:} \)</p>
+        <p>\( \quad \text{Gradient at } \theta = 2.4: 2 * 2.4 = 4.8 \)</p>
+        <p>\( \quad \text{Update: } \theta := 2.4 - 0.1 * 4.8 = 1.92 \)</p>
+        <p>\( \text{4. And so on...} \)</p>
+        <p>We first calculate the derivative of our simple cost function. In each iteration, we evaluate the gradient at our current \( \theta \) value. Then, we update \( \theta \) by subtracting the learning rate times the gradient.</p>
+        <p>You can use this interactive graph to play around with different initial values and learning rates. See how the red dot moves closer to the minimum with each step!</p>
+        <div class="interactive-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Interactive graph of \( J(\theta) = \theta^2 \). The graph is a parabola with its minimum at the origin (0,0). There are two sliders: one for the initial value of \( \theta \) (range: -5 to 5) and one for the learning rate \( \alpha \) (range: 0.01 to 0.5). A red dot on the parabola represents the current value of \( \theta \). A 'Step' button is below the graph. When the user clicks 'Step', the red dot moves along the parabola according to one iteration of gradient descent. The calculation for each step is displayed below the button, showing the current \( \theta \), the calculated gradient, and the updated \( \theta \) after the step. The number of steps taken is also displayed (e.g., 'Iteration: 1', 'Iteration: 2', etc.).">
+        </div>
+        <div class="continue-button" onclick="showNextSection(11)">Continue</div>
     </section>
 
     <section id="section11">
-        <div class="test-your-knowledge">
-            <h3>Test Your Knowledge</h3>
-            <h4>If the cost function is \(C(\beta) = (\beta - 5)^2 \) and the current guess is \(\beta = 8 \) with a learning rate of 0.2, what is the new value of \(\beta\) after one Gradient Descent update?</h4>
-            <button class="check-button" onclick="revealAnswer('test-your-knowledge-1', event)">Reveal</button>
-            <div id="test-your-knowledge-1" style="display: none;">
-    <p><strong>Answer:</strong> 6.8</p>
-    <p><strong>Explanation:</strong> 
-        <ul>
-            <li>Calculate the gradient: \(\nabla C(8) = 2(8 - 5) = 6\)</li>
-            <li>Update \(\beta\): \( \beta_{\text{new}} = 8 - 0.2 \times 6 = 8 - 1.2 = 6.8 \)</li>
-        </ul>
-    </p>
-</div>
-
+        <p>Let's add a few more terms to our optimization dictionary:</p>
+        <div class="vocab-section">
+            <h3>Build Your Vocab</h3>
+            <h4 class="vocab-term">Gradient</h4>
+            <p>A vector containing the partial derivatives of a function, indicating the direction of the steepest ascent.</p>
+            <h4 class="vocab-term">Learning Rate \( \alpha \)</h4>
+            <p>A hyperparameter that determines the step size taken in the direction opposite to the gradient during each iteration.</p>
+            <h4 class="vocab-term">Iteration</h4>
+            <p>One complete cycle of calculating the gradient and updating the parameters.</p>
         </div>
-        <div class="continue-button" onclick="showNextSection(12, event)">Continue</div>
+        <div class="continue-button" onclick="showNextSection(12)">Continue</div>
     </section>
 
     <section id="section12">
         <div class="faq-section">
             <h3>Frequently Asked Questions</h3>
-            <h4>Does Gradient Descent always find the absolute minimum?</h4>
-            <p>Not necessarily. Gradient Descent can get stuck in local minima, especially in complex functions with multiple minima. We'll discuss strategies to address this in a later lesson.</p>
+            <h4>How do we know when to stop the iterations?</h4>
+            <p>We typically stop when either the changes in the parameters become very small (convergence) or we reach a predefined maximum number of iterations. We will talk more about convergence in a later lesson.</p>
         </div>
-        <div class="continue-button" onclick="showNextSection(13, event)">Continue</div>
+        <div class="continue-button" onclick="showNextSection(13)">Continue</div>
     </section>
 
     <section id="section13">
-        <h3>Review and Reflect</h3>
-        <p>In this lesson, we explored the fundamental concepts of Gradient Descent. We learned how it uses the gradient of a cost function to iteratively find the minimum, much like navigating down a mountain in fog. We also delved into the math behind the update rule and saw a simple example of how it works in practice.</p>
-        <div class="continue-button" onclick="showNextSection(14, event)">Continue</div> 
+        <p>You might be wondering, why go through all this iterative process? Why not just find the minimum directly? Well, for some simple functions, we can. But for complex machine learning models with millions of parameters and huge datasets, calculating the exact solution becomes computationally infeasible. Gradient Descent provides a practical way to find a good solution, even if it might not be the absolute best.</p>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="Comparison of computational time vs. dataset size for direct calculation vs. gradient descent. The graph has 'Dataset Size' on the x-axis and 'Computational Time' on the y-axis. There are two lines: one for 'Direct Calculation' and one for 'Gradient Descent'. The 'Direct Calculation' line starts low but curves sharply upwards as dataset size increases, indicating exponential growth. The 'Gradient Descent' line also starts low but increases at a much slower, near-linear rate as dataset size grows. The point where the lines diverge is labeled 'Feasibility Limit for Direct Calculation'. A caption explains: 'Gradient Descent's computational time increases more slowly with dataset size, making it feasible for larger datasets where direct calculation is not practical'.">
+        </div>
+        <p>As you can see, Gradient Descent's computational cost scales much better with large datasets compared to trying to calculate the solution directly.</p>
+        <div class="continue-button" onclick="showNextSection(14)">Continue</div>
     </section>
 
     <section id="section14">
-        <p><strong>Key takeaways:</strong></p>
-        <ul>
-            <li>Gradient Descent is an iterative optimization algorithm used to minimize a cost function.</li>
-            <li>The gradient indicates the direction of the steepest ascent, and we move in the opposite direction to descend.</li>
-            <li>The learning rate controls the size of the steps we take during each iteration.</li>
-        </ul>
-        <div class="continue-button" onclick="showNextSection(15, event)">Continue</div>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="'Expectation vs. Reality' meme. Expectation: An elegant mathematical formula written on a chalkboard, representing finding the minimum of a function directly. Reality: A cartoon robot with a bewildered expression, slowly inching its way down a bumpy hill, representing the iterative process of Gradient Descent.">
+        </div>
+        <p>Sometimes, the reality of machine learning is a bit more... iterative than we might expect!</p>
+        <div class="continue-button" onclick="showNextSection(15)">Continue</div>
     </section>
 
     <section id="section15">
-        <p>Make sure you understand the core concepts and the update rule before moving on to the next lesson, where we'll apply Gradient Descent to Linear Regression.</p>
+        <h2>Conclusion</h2>
+        <p>Great job today! You've learned about optimization, the basics of Gradient Descent, and how to do some of the math behind it. You also saw Gradient Descent visually. In the next lesson we will get our hands dirty with code and dive deeper in the math.</p>
     </section>
 
     <script>
@@ -426,12 +320,12 @@
         document.getElementById("section1").style.display = "block";
         document.getElementById("section1").style.opacity = "1";
 
-        function showNextSection(nextSectionId, event) {
+        function showNextSection(nextSectionId) {
             const currentButton = event.target;
             const nextSection = document.getElementById("section" + nextSectionId);
-
+            
             currentButton.style.display = "none";
-
+            
             nextSection.style.display = "block";
             setTimeout(() => {
                 nextSection.style.opacity = "1";
@@ -442,10 +336,10 @@
             }, 500);
         }
 
-        function revealAnswer(id, event) {
+        function revealAnswer(id) {
             const revealText = document.getElementById(id);
             const revealButton = event.target;
-
+            
             revealText.style.display = "block";
             revealButton.style.display = "none";
         }
